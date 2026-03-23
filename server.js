@@ -339,6 +339,10 @@ function arePartyMates(playerIdA, playerIdB) {
   return partyA.members.has(playerIdB);
 }
 
+app.get("/", (_req, res) => {
+  res.status(200).send("Krashbox server is running 🚀");
+});
+
 app.get("/health", (_req, res) => {
   res.json({
     ok: true,
