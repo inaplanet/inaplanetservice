@@ -4,10 +4,11 @@
   "description": "Krashbox multiplayer game server",
   "main": "server.js",
   "scripts": {
+    "build": "npm install",
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   },
   "dependencies": {
     "cors": "^2.8.5",
