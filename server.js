@@ -1,4 +1,8 @@
-require("dotenv").config();
+try {
+  require("dotenv").config();
+} catch (_error) {
+  // dotenv is optional on Render
+}
 
 const http = require("http");
 const express = require("express");
