@@ -1,8 +1,4 @@
-try {
-  require("dotenv").config();
-} catch (_error) {
-  // dotenv is optional on Render
-}
+require("dotenv").config();
 
 const http = require("http");
 const express = require("express");
@@ -16,9 +12,14 @@ app.use(express.json());
 
 const PORT = Number(process.env.PORT || 8080);
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
-const MAX_PLAYERS_PER_WORLD = Number(process.env.MAX_PLAYERS_PER_WORLD || 20);
+const MAX_PLAYERS_PER_WORLD = Number(process.env.MAX_PLAYERS_PER_WORLD || 5);
 const MAX_PARTY_SIZE = Number(process.env.MAX_PARTY_SIZE || 8);
 const TOKEN_EXPIRES_IN = process.env.TOKEN_EXPIRES_IN || "7d";
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+if (IS_PRODUCTION && (!process.env.JWT_SECRET || JWT_SECRET === "dev-secret-change-me")) {
+  throw new Error("JWT_SECRET must be set to a strong value in production.");
+}
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -338,10 +339,6 @@ function arePartyMates(playerIdA, playerIdB) {
   if (!partyA) return false;
   return partyA.members.has(playerIdB);
 }
-
-app.get("/", (_req, res) => {
-  res.status(200).send("Krashbox server is running 🚀");
-});
 
 app.get("/health", (_req, res) => {
   res.json({
@@ -982,6 +979,6 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
